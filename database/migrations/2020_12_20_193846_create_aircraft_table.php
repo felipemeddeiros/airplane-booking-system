@@ -15,10 +15,10 @@ class CreateAircraftTable extends Migration
     {
         Schema::create('aircraft', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('code');
             $table->unsignedInteger('aircraft_type_id');
-            $table->unsignedInteger('sits_count');
-            $table->unsignedInteger('rows');
+            $table->unsignedTinyInteger('sits_count');
+            $table->unsignedTinyInteger('rows');
             $table->string('rows_arrangement', 100)->default('A B C _ D E F');
             $table->timestamps();
 
