@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 /**
  * Booking management routes
  */
-Route::prefix('booking')->group(function () {
+Route::prefix('bookings')->group(function () {
 
     Route::get('', [BookingController::class, 'index']);
     Route::delete('', [BookingController::class, 'destroyAll']);

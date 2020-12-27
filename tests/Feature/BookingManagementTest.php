@@ -26,7 +26,7 @@ class BookingManagementTest extends TestCase
         $aircraft = Aircraft::factory()->create();
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $this->faker->name, 'quantity_seats' => 1],
@@ -50,11 +50,11 @@ class BookingManagementTest extends TestCase
 
         $names    = $this->makePassengersArray(2, 2);
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             ['passengers' => $names]
         );
 
-        $response = $this->getJson('/api/booking/');
+        $response = $this->getJson('/api/bookings/');
 
         $response
             ->assertStatus(200)
@@ -73,13 +73,13 @@ class BookingManagementTest extends TestCase
 
         $names    = $this->makePassengersArray(2, 2);
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             ['passengers' => $names]
         );
 
         $this->assertCount(4, Booking::all());
 
-        $response = $this->deleteJson('/api/booking/');
+        $response = $this->deleteJson('/api/bookings/');
 
         $response->assertStatus(200);
 
@@ -91,7 +91,7 @@ class BookingManagementTest extends TestCase
     {
         $aircraft = Aircraft::factory()->create();
 
-        $response = $this->postJson('/api/booking/aircrafts/' . $aircraft->id, []);
+        $response = $this->postJson('/api/bookings/aircrafts/' . $aircraft->id, []);
 
         $response->assertJsonValidationErrors('passengers', 'error');
     }
@@ -101,7 +101,7 @@ class BookingManagementTest extends TestCase
     {
         $aircraft = Aircraft::factory()->create();
 
-        $response = $this->postJson('/api/booking/aircrafts/' . $aircraft->id, ['passengers' => ["test"]]);
+        $response = $this->postJson('/api/bookings/aircrafts/' . $aircraft->id, ['passengers' => ["test"]]);
 
         $response->assertJsonValidationErrors(
             ['passengers.0.name', 'passengers.0.quantity_seats'],
@@ -115,7 +115,7 @@ class BookingManagementTest extends TestCase
         $aircraft = Aircraft::factory()->create();
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $this->faker->name, 'quantity_seats' => 8],
@@ -133,7 +133,7 @@ class BookingManagementTest extends TestCase
 
         $names    = $this->makePassengersArray(4, 1);
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             ['passengers' => $names]
         );
 
@@ -157,12 +157,12 @@ class BookingManagementTest extends TestCase
         $aircraft = Aircraft::factory()->create();
 
         $names = $this->makePassengersArray(52, 1);
-        $this->postJson('/api/booking/aircrafts/' . $aircraft->id, ['passengers' => $names]);
+        $this->postJson('/api/bookings/aircrafts/' . $aircraft->id, ['passengers' => $names]);
 
         $name = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 1],
@@ -187,12 +187,12 @@ class BookingManagementTest extends TestCase
         $aircraft = Aircraft::factory()->create();
 
         $names = $this->makePassengersArray(52, 3);
-        $this->postJson('/api/booking/aircrafts/' . $aircraft->id, ['passengers' => $names]);
+        $this->postJson('/api/bookings/aircrafts/' . $aircraft->id, ['passengers' => $names]);
 
         $name = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 1],
@@ -212,7 +212,7 @@ class BookingManagementTest extends TestCase
         $names = $this->makePassengersArray(53, 3);
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             ['passengers' => $names]
         );
 
@@ -231,7 +231,7 @@ class BookingManagementTest extends TestCase
         array_push($names, ['name' => $this->faker->name, 'quantity_seats' => 2]);
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             ['passengers' => $names]
         );
 
@@ -253,12 +253,12 @@ class BookingManagementTest extends TestCase
         $aircraft = Aircraft::factory()->create();
 
         $names = $this->makePassengersArray(53, 1);
-        $this->postJson('/api/booking/aircrafts/' . $aircraft->id, ['passengers' => $names]);
+        $this->postJson('/api/bookings/aircrafts/' . $aircraft->id, ['passengers' => $names]);
 
         $name = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 2],
@@ -286,12 +286,12 @@ class BookingManagementTest extends TestCase
         //filling one seat alone
         array_push($names, ['name' => $this->faker->name, 'quantity_seats' => 1]);
 
-        $this->postJson('/api/booking/aircrafts/' . $aircraft->id, ['passengers' => $names]);
+        $this->postJson('/api/bookings/aircrafts/' . $aircraft->id, ['passengers' => $names]);
 
         $name = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 2],
@@ -321,7 +321,7 @@ class BookingManagementTest extends TestCase
         array_push($names, ['name' => $this->faker->name, 'quantity_seats' => 3]);
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             ['passengers' => $names]
         );
 
@@ -343,12 +343,12 @@ class BookingManagementTest extends TestCase
         $aircraft = Aircraft::factory()->create();
 
         $names = $this->makePassengersArray(52, 1);
-        $this->postJson('/api/booking/aircrafts/' . $aircraft->id, ['passengers' => $names]);
+        $this->postJson('/api/bookings/aircrafts/' . $aircraft->id, ['passengers' => $names]);
 
         $name = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 3],
@@ -374,7 +374,7 @@ class BookingManagementTest extends TestCase
         $name     = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 4],
@@ -399,12 +399,12 @@ class BookingManagementTest extends TestCase
         $aircraft = Aircraft::factory()->create();
 
         $names = $this->makePassengersArray(52, 1);
-        $this->postJson('/api/booking/aircrafts/' . $aircraft->id, ['passengers' => $names]);
+        $this->postJson('/api/bookings/aircrafts/' . $aircraft->id, ['passengers' => $names]);
 
         $name = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 4],
@@ -432,12 +432,12 @@ class BookingManagementTest extends TestCase
         //more one to make the test
         array_push($names, ['name' => $this->faker->name, 'quantity_seats' => 1]);
 
-        $this->postJson('/api/booking/aircrafts/' . $aircraft->id, ['passengers' => $names]);
+        $this->postJson('/api/bookings/aircrafts/' . $aircraft->id, ['passengers' => $names]);
 
         $name = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 4],
@@ -463,7 +463,7 @@ class BookingManagementTest extends TestCase
         $name     = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 5],
@@ -488,12 +488,12 @@ class BookingManagementTest extends TestCase
         $aircraft = Aircraft::factory()->create();
 
         $names = $this->makePassengersArray(52, 1);
-        $this->postJson('/api/booking/aircrafts/' . $aircraft->id, ['passengers' => $names]);
+        $this->postJson('/api/bookings/aircrafts/' . $aircraft->id, ['passengers' => $names]);
 
         $name = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 5],
@@ -519,7 +519,7 @@ class BookingManagementTest extends TestCase
         $name     = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 6],
@@ -544,12 +544,12 @@ class BookingManagementTest extends TestCase
         $aircraft = Aircraft::factory()->create();
 
         $names = $this->makePassengersArray(52, 1);
-        $this->postJson('/api/booking/aircrafts/' . $aircraft->id, ['passengers' => $names]);
+        $this->postJson('/api/bookings/aircrafts/' . $aircraft->id, ['passengers' => $names]);
 
         $name = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 6],
@@ -575,7 +575,7 @@ class BookingManagementTest extends TestCase
         $name     = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 7],
@@ -600,12 +600,12 @@ class BookingManagementTest extends TestCase
         $aircraft = Aircraft::factory()->create();
 
         $names = $this->makePassengersArray(54, 1);
-        $this->postJson('/api/booking/aircrafts/' . $aircraft->id, ['passengers' => $names]);
+        $this->postJson('/api/bookings/aircrafts/' . $aircraft->id, ['passengers' => $names]);
 
         $name = $this->faker->name;
 
         $response = $this->postJson(
-            '/api/booking/aircrafts/' . $aircraft->id,
+            '/api/bookings/aircrafts/' . $aircraft->id,
             [
                 'passengers' => [
                     ['name' => $name, 'quantity_seats' => 7],
