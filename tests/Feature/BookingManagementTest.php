@@ -69,8 +69,6 @@ class BookingManagementTest extends TestCase
     /** @test */
     public function the_bookings_can_be_cleared()
     {
-        $this->withoutExceptionHandling();
-
         $aircraft = Aircraft::factory()->create();
 
         $names    = $this->makePassengersArray(2, 2);
