@@ -9,17 +9,8 @@ class Aircraft extends Model
 {
     use HasFactory;
 
-    public function booking($passenger, $rowNumber, $rowSeat)
+    public function bookings()
     {
-        $this->reservations()->create([
-            'passenger_id' => $passenger->id,
-            'row_number'   => $rowNumber,
-            'row_seat'     => $rowSeat,
-        ]);
-    }
-
-    public function reservations()
-    {
-        return $this->hasMany('App\Models\Reservation');
+        return $this->hasMany('App\Models\Booking')->where('canceled', 0);
     }
 }
