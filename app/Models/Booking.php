@@ -11,6 +11,10 @@ class Booking extends Model
 
     protected $fillable = ['aircraft_id', 'passenger_id', 'row_number', 'row_seat'];
 
+    /**
+     * Booking passenger
+     * @return belongsTo
+     */
     public function passenger()
     {
         return $this->belongsTo('App\Models\Passenger');

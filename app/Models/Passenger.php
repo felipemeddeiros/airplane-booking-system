@@ -11,6 +11,10 @@ class Passenger extends Model
 
     protected $fillable = ['name'];
 
+    /**
+     * Passenger's bookings
+     * @return hasMany
+     */
     public function bookings()
     {
         return $this->hasMany('App\Models\Booking')->where('canceled', 0);
