@@ -1,63 +1,172 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Airplane Booking System
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+REST API for multiple-seat booking
 
-## About Laravel
+### Design description
+I designed the code using the SOLID principles and the design patterns: repositories and services. 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Every controller has one work that's why I inject their main work in the class construct method when I need some work from another class I add it in the specific method using type hint. I keep the controllers clean, I use them just to point who has to work, repository or the service, and to deliver the response. 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+I use the repositories to isolate the database connections so I can have better control and can have a better organization of complex queries. 
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+I use the services to isolate and keep the business rules
 
-## Learning Laravel
+For this solution I developed 3 object classes: 
+    - Bookings, to keep all the bookings and control the application of the rules
+    - Row, to keep the seats and other rows as a node inside a node so I can have recursive access to them
+    - Seat, to control if it is occupied or is on window
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+So I have the Booking Service which manage these 3 classes to do the bookings.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+### Possible enhancements
+    - Login system
+    - canceling system
+    - Bookings by date
+    - Friendly url
+    - Register the passenger with a personal id
+    - State design pattern to manage the rules 
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### Tecnologies
+    - Laravel 8
+    - Mysql 8
+    - Docker
 
-### Premium Partners
+### Instructions 
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
+Get in the docker directory and execute. It may take a while
+```sh
+$ docker-compose up -d
+```
 
-## Contributing
+After the first step finishes execute the comands:
+```sh
+$ docker container exec -it php-fpm composer install \
+    && docker container exec -it php-fpm cp .env.example .env \
+    && docker container exec -it php-fpm php ./artisan key:generate \
+    && docker container exec -it php-fpm php ./artisan config:cache \
+    && docker container exec -it php-fpm php ./artisan migrate:fresh --seed \
+    && docker container exec -it php-fpm php ./artisan db:seed --class=ShortRangeAircraftSeeder \
+    && docker container exec -it php-fpm composer dump-autoload \
+    && docker container exec -it php-fpm php ./artisan optimize:clear
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+Now the system might have been available on the following link: http://localhost 
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+Execute the tests
+```sh
+$ docker container exec -it php-fpm ./artisan test
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## API endpoints
 
-## License
+### POST /bookings/aircrafts/{aircraft}
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# airplane-booking-system
+**Url Parameters**
+
+|          Name | Required |  Type   | Description                                                                                                                                                           |
+| -------------:|:--------:|:-------:| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|     `aircraft` | required | integer  | The id of the aircraft(One aircraft has already been added with the id "1").                                                                     |
+
+**Parameters**
+
+```json
+{
+    "passengers" : [
+        {
+            "name" : "Iosu",
+            "quantity_seats": 7
+        },
+        {
+            "name" : "Gerard",
+            "quantity_seats": 2
+        }
+    ]
+}
+```
+
+**Response**
+
+```json
+{
+    "data": [
+        {
+          "passenger": "Iosu",
+          "seats": "A1, B1, C1, D1, A2, B2, C2"
+        },
+        {
+          "passenger": "Gerard",
+          "seats": "E1, F1"
+        }
+    ]
+}
+```
+**Error Response**
+```json
+{
+    "error": {
+        "passengers": [
+            "The passengers field is required."
+        ]
+    },
+    "code": 422
+}
+```
+```json
+{
+    "error": {
+        "passengers.0.name": [
+            "The passengers.0.name field is required."
+        ],
+        "passengers.0.quantity_seats": [
+            "The passengers.0.quantity_seats field is required."
+        ]
+    },
+    "code": 422
+}
+```
+```json
+{
+    "error": "No seats available",
+    "code": 422
+}
+```
+```json
+{
+    "error": "There are no enough seats for this booking",
+    "code": 422
+}
+```
+
+
+### GET /bookings 
+
+**Response**
+
+```json
+{
+    "data": [
+        {
+          "passenger": "Iosu",
+          "seats": "A1, B1, C1, D1, A2, B2, C2"
+        },
+        {
+          "passenger": "Gerard",
+          "seats": "E1, F1"
+        }
+    ]
+}
+```
+
+### DELETE /bookings 
+
+**Response**
+
+```json
+{
+    "data": []
+}
+```
+
