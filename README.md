@@ -11,13 +11,13 @@ I use the repositories to isolate the database connections so I can have better 
 
 I use the services to isolate and keep the business rules
 
-For this solution I developed 3 object classes: 
+For this solution I developed 3 object classes:
+
     - Bookings, to keep all the bookings and control the application of the rules
     - Row, to keep the seats and other rows as a node inside a node so I can have recursive access to them
     - Seat, to control if it is occupied or is on window
 
 So I have the Booking Service which manage these 3 classes to do the bookings.
-
 
 ### Possible enhancements
     - Login system
@@ -26,6 +26,8 @@ So I have the Booking Service which manage these 3 classes to do the bookings.
     - Friendly url
     - Register the passenger with a personal id
     - State design pattern to manage the rules 
+
+### [Git History](https://github.com/felipemeddeiros/airplane-booking-system/commits/main)
 
 ### Tecnologies
     - Laravel 8
